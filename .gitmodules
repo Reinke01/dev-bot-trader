@@ -1,0 +1,3 @@
+[submodule "devbot-trader-dashboard"]
+	path = devbot-trader-dashboard
+	url = https://github.com/Reinke01/devbot-trader-dashboard.git

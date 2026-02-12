@@ -1,0 +1,2 @@
+# Atua em conjunto com outros agentes para operações específicas
+# Avalia condições macro para definir nível de exposição ao risco, prazo e direção preferida dos trades, rebalanceamento de portfólio, etc

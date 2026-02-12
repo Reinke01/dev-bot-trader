@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install backend deps
+        run: |
+          if [ -f dev-bot-trader-main/requirements.txt ]; then python -m pip install -r dev-bot-trader-main/requirements.txt || true; fi
+
+      - name: Lint frontend (install node)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install frontend deps
+        run: |
+          if [ -f devbot-trader-dashboard/package.json ]; then cd devbot-trader-dashboard && npm ci || true; fi
