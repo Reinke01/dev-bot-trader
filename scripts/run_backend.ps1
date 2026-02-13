@@ -4,15 +4,15 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-# Repo root (scripts is in repo/scripts)
-$RepoRoot = (Resolve-Path "$PSScriptRoot\.." ).Path
+# Repo root (scripts is in repo/scripts) - ensure a single string path
+$RepoRoot = (Resolve-Path "$PSScriptRoot\.." | Select-Object -First 1).Path
 
 # Candidate folders that may contain the backend source
 $candidates = @(
-  Join-Path $RepoRoot "backend",
-  Join-Path $RepoRoot "dev-bot-trader-main",
-  Join-Path $RepoRoot "devbot-trader-main",
-  Join-Path $RepoRoot "."
+  (Join-Path $RepoRoot "backend"),
+  (Join-Path $RepoRoot "dev-bot-trader-main"),
+  (Join-Path $RepoRoot "devbot-trader-main"),
+  $RepoRoot
 )
 
 $found = $null
