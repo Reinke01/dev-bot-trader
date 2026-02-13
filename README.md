@@ -24,18 +24,24 @@ cd dev-bot-trader
 
 ## Rodando localmente (Windows — PowerShell)
 
-1) Backend: cria/usa `.venv`, instala dependências e inicia a API.
+1) Backend: cria/usa `.venv`, instala dependências e inicia a API. Rode a partir da raiz do repositório:
 
 ```powershell
 # na raiz do repositório
 .\scripts\run_backend.ps1
 ```
 
-2) Frontend: instala dependências do Node (se necessário) e inicia o Vite.
+2) Frontend: instala dependências do Node (se necessário) e inicia o Vite (script detecta `package.json`):
 
 ```powershell
-cd devbot-trader-dashboard
-.\scripts\run_front.ps1
+# na raiz do repositório
+.\scripts\run_frontend.ps1
+```
+
+3) Verificação rápida do ambiente:
+
+```powershell
+.\scripts\doctor.ps1
 ```
 
 Endpoints úteis (após o backend rodando):
@@ -48,6 +54,7 @@ Endpoints úteis (após o backend rodando):
 Nunca committe chaves ou `.env` no repositório. Há exemplos de variáveis em:
 
 - `dev-bot-trader-main/.env.example` (backend)
+- `backend/.env.example` (also present)
 - `devbot-trader-dashboard/.env.example` (frontend)
 
 Preencha suas chaves da Bybit e Telegram conforme o `*.env.example` antes de rodar em produção.
