@@ -1,0 +1,1 @@
+# agente para buscar dados de coinglass, como dados de liquidação, mapas de calor de liquidação, mapas de calor de rsi, etc
