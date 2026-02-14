@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-bg: #0a0a0c;
+  --color-card: #121217;
+  --color-primary: #ffd700;
+  --color-secondary: #00e5ff;
+  --color-danger: #ff4b2b;
+  --color-success: #00c853;
+}
+
+[data-theme='cyber'] {
+  --color-primary: #00e5ff;
+  --color-secondary: #ffd700;
+}
+
+[data-theme='matrix'] {
+  --color-primary: #00ff41;
+  --color-secondary: #003b00;
+}
+
+[data-theme='ruby'] {
+  --color-primary: #ff1f1f;
+  --color-secondary: #ff8a8a;
+}
+
+[data-theme='white'] {
+  --color-bg: #f8fafc;
+  --color-card: #ffffff;
+  --color-primary: #1e293b;
+  --color-secondary: #64748b;
+  color: #1e293b;
+}
+
+[data-theme='white'] .glass {
+  background: rgba(255, 255, 255, 0.8) !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+  color: #1e293b !important;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-white font-sans transition-colors duration-500 min-h-screen;
+  }
+}
+
+[data-theme='white'] body {
+  @apply text-slate-900;
+}
+
+.glass {
+  @apply bg-white bg-opacity-[0.03] backdrop-blur-md border border-white border-opacity-[0.05];
+}

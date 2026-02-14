@@ -1,0 +1,1 @@
+# avaliação mais técnica para operações em DeFi

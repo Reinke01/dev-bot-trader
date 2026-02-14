@@ -1,0 +1,5 @@
+{
+  "/terminal/page": "app/terminal/page.js",
+  "/monitor/page": "app/monitor/page.js",
+  "/settings/page": "app/settings/page.js"
+}

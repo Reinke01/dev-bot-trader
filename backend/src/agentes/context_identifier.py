@@ -1,0 +1,1 @@
+# identificação do contexto do trade (como parâmetros das estratégias e quais utilizar)

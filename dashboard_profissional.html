@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💎 Dashboard Profissional - Análise Multi-Dimensional</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1a202c;
+            --light: #f7fafc;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            background: linear-gradient(45deg, #fff, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        button {
+            background: rgba(255,255,255,0.15);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 12px 28px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        button:hover:before {
+            width: 300px;
+            height: 300px;
+        }
+
+        button:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        /* Status Bar */
+        .status-bar {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.2);
+            animation: slideInUp 0.6s ease-out;
+        }
+
+        .status-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .status-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .status-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .status-value {
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+
+        /* Main Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        /* Card Styles */
+        .card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 25px;
+            padding: 30px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fadeInUp 0.6s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border-color: rgba(255,255,255,0.4);
+        }
+
+        .card:hover:before {
+            opacity: 1;
+        }
+
+        /* Card Header */
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255,255,255,0.15);
+        }
+
+        .coin-name {
+            font-size: 2em;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Score Display */
+        .score-display {
+            position: relative;
+        }
+
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            font-weight: bold;
+            position: relative;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        .score-circle.excelente {
+            background: linear-gradient(135deg, #10b981, #059669);
+            animation: pulse-green 2s infinite;
+        }
+
+        .score-circle.muito-bom {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            animation: pulse-blue 2s infinite;
+        }
+
+        .score-circle.bom {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        }
+
+        .score-circle.moderado {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        .score-circle.fraco {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+        }
+
+        @keyframes pulse-green {
+            0%, 100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(16, 185, 129, 0.8); }
+        }
+
+        @keyframes pulse-blue {
+            0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(59, 130, 246, 0.8); }
+        }
+
+        .score-value {
+            font-size: 1.2em;
+        }
+
+        .score-label {
+            font-size: 0.4em;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        /* Indicators Section */
+        .indicators-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .indicator-box {
+            background: rgba(0,0,0,0.2);
+            padding: 15px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+        }
+
+        .indicator-box:hover {
+            background: rgba(0,0,0,0.3);
+            border-color: rgba(255,255,255,0.3);
+        }
+
+        .indicator-title {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .indicator-value {
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        .indicator-detail {
+            font-size: 0.85em;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+
+        /* Signals */
+        .signals-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 15px;
+        }
+
+        .signals-title {
+            font-weight: bold;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+
+        .signal-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            margin: 5px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 20px;
+            font-size: 0.9em;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s;
+        }
+
+        .signal-badge:hover {
+            background: rgba(255,255,255,0.25);
+            transform: scale(1.05);
+        }
+
+        /* Recommendation Box */
+        .recommendation-box {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2));
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            border: 2px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .recommendation-box.warning {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(217, 119, 6, 0.2));
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+
+        .recommendation-box.danger {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.2));
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        /* Alert Banner */
+        .alert-banner {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            padding: 25px;
+            border-radius: 20px;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: bold;
+            animation: shake 0.5s, glow 2s infinite;
+            box-shadow: 0 10px 30px rgba(240, 147, 251, 0.4);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 10px 30px rgba(240, 147, 251, 0.4); }
+            50% { box-shadow: 0 10px 50px rgba(240, 147, 251, 0.8); }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 60px;
+        }
+
+        .spinner {
+            border: 5px solid rgba(255,255,255,0.3);
+            border-top: 5px solid white;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .indicators-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+            }
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            opacity: 0.8;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💎 Dashboard Profissional</h1>
+            <p class="subtitle">Análise Multi-Dimensional com Score 0-100</p>
+        </header>
+
+        <div class="controls">
+            <button onclick="atualizarDados()">🔄 Atualizar Agora</button>
+            <button onclick="toggleAutoUpdate()">⏰ Auto-Update: <span id="autoStatus">OFF</span></button>
+            <button onclick="toggleSound()">🔔 Som: <span id="soundStatus">ON</span></button>
+            <button onclick="filtrar('excelente')">🟢 Excelentes (90+)</button>
+            <button onclick="filtrar('bom')">🟡 Bons (60+)</button>
+            <button onclick="filtrar('todos')">📊 Todos</button>
+        </div>
+
+        <div class="status-bar">
+            <div class="status-content">
+                <div class="status-item">
+                    <span class="status-label">⏰ Última Atualização</span>
+                    <span class="status-value" id="lastUpdate">--:--</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">🟢 Excelentes</span>
+                    <span class="status-value" id="countExcelente">0</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">🟡 Bons</span>
+                    <span class="status-value" id="countBom">0</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">📊 Total Analisado</span>
+                    <span class="status-value" id="countTotal">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="alerts"></div>
+
+        <div id="content" class="loading">
+            <div class="spinner"></div>
+            <p style="font-size: 1.3em;">Carregando análise profissional...</p>
+        </div>
+
+        <footer>
+            <p>🎯 Sistema Profissional de Análise Multi-Dimensional</p>
+            <p>Market Trend | Structure | Fibonacci | Wyckoff | Didi+BB | Momentum</p>
+        </footer>
+    </div>
+
+    <!-- Audio para alertas -->
+    <audio id="alertSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGH0fPTgjMGHm7A7+OZUB0QXq/o57BjGwU+" src="" type="audio/wav">
+    </audio>
+
+    <script>
+        let autoUpdateEnabled = false;
+        let autoUpdateInterval = null;
+        let soundEnabled = true;
+        let dadosCache = null;
+        let filtroAtual = 'todos';
+
+        // Carregar dados
+        async function atualizarDados() {
+            try {
+                document.getElementById('content').innerHTML = `
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p style="font-size: 1.3em;">Analisando mercado...</p>
+                    </div>
+                `;
+
+                // Simular dados (conectar à API real depois)
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                usarDadosExemplo();
+                
+            } catch (error) {
+                console.error('Erro:', error);
+                usarDadosExemplo();
+            }
+        }
+
+        // Dados de exemplo
+        function usarDadosExemplo() {
+            const dados = [
+                {
+                    simbolo: 'ARBUSDT',
+                    score_final: 42.0,
+                    classification: {level: 'MODERADO', emoji: '🟡', description: 'Sinais mistos - Cautela'},
+                    recommendation: '⏰ AGUARDAR - Sinais mistos',
+                    main_signals: ['Fase de Acumulação', 'Tendência ALTA'],
+                    price_current: 0.1198,
+                    details: {
+                        market_trend: {trend: 'ALTA', confidence: 67, quality: 29.2, adx: {value: 29.2, interpretation: 'Moderada - Alta'}},
+                        structure: {structure_type: 'HH_HL', interpretation: 'Higher Highs + Higher Lows', score: 90},
+                        fibonacci: {score: 25, interpretation: 'Próximo de 23.6%'},
+                        wyckoff: {phase: 'ACCUMULATION', score: 30, signals: ['Acumulação']},
+                        didi_bollinger: {score: 15, spread_didi: 5.2, posicao_bb: 35},
+                        momentum: {score: 45, rsi: 48.5}
+                    }
+                },
+                {
+                    simbolo: 'SOLUSDT',
+                    score_final: 31.1,
+                    classification: {level: 'FRACO', emoji: '⚪', description: 'Poucos sinais - Evitar'},
+                    recommendation: '❌ EVITAR - Poucos sinais favoráveis',
+                    main_signals: ['BOS BAIXA', 'ChoCH BAIXISTA'],
+                    price_current: 87.44,
+                    details: {
+                        market_trend: {trend: 'ALTA', confidence: 67, quality: 22.7},
+                        structure: {structure_type: 'MISTO', score: 20},
+                        fibonacci: {score: 10},
+                        wyckoff: {phase: 'ACCUMULATION', score: 30},
+                        didi_bollinger: {score: 10},
+                        momentum: {score: 40, rsi: 45.2}
+                    }
+                },
+                {
+                    simbolo: 'UNIUSDT',
+                    score_final: 31.1,
+                    classification: {level: 'FRACO', emoji: '⚪', description: 'Poucos sinais - Evitar'},
+                    recommendation: '❌ EVITAR',
+                    main_signals: ['BOS BAIXA', 'Lateral'],
+                    price_current: 3.536,
+                    details: {
+                        market_trend: {trend: 'ALTA', confidence: 67, quality: 22.8},
+                        structure: {structure_type: 'LH_HL', score: 30},
+                        fibonacci: {score: 10},
+                        wyckoff: {phase: 'ACCUMULATION', score: 30},
+                        didi_bollinger: {score: 10},
+                        momentum: {score: 38, rsi: 44.1}
+                    }
+                }
+            ];
+
+            dadosCache = dados;
+            renderizarDados(dados);
+            atualizarStatus(dados);
+            verificarAlertas(dados);
+        }
+
+        // Renderizar dados
+        function renderizarDados(dados) {
+            let dadosFiltrados = dados;
+            
+            if (filtroAtual === 'excelente') {
+                dadosFiltrados = dados.filter(d => d.score_final >= 90);
+            } else if (filtroAtual === 'bom') {
+                dadosFiltrados = dados.filter(d => d.score_final >= 60);
+            }
+
+            const html = dadosFiltrados.map(moeda => criarCard(moeda)).join('');
+            document.getElementById('content').innerHTML = `<div class="main-grid">${html}</div>`;
+        }
+
+        // Criar card
+        function criarCard(moeda) {
+            const coinName = moeda.simbolo.replace('USDT', '');
+            const scoreClass = moeda.score_final >= 90 ? 'excelente' :
+                              moeda.score_final >= 75 ? 'muito-bom' :
+                              moeda.score_final >= 60 ? 'bom' :
+                              moeda.score_final >= 40 ? 'moderado' : 'fraco';
+            
+            const recClass = moeda.score_final >= 60 ? '' : 
+                            moeda.score_final >= 40 ? 'warning' : 'danger';
+
+            return `
+                <div class="card">
+                    <div class="card-header">
+                        <div class="coin-name">${moeda.classification.emoji} ${coinName}</div>
+                        <div class="score-display">
+                            <div class="score-circle ${scoreClass}">
+                                <div class="score-value">${moeda.score_final.toFixed(1)}</div>
+                                <div class="score-label">/100</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <div style="font-size: 1.4em; font-weight: bold;">${moeda.classification.level}</div>
+                        <div style="opacity: 0.8; margin-top: 5px;">${moeda.classification.description}</div>
+                        <div style="font-size: 1.3em; margin-top: 10px;">💰 $${moeda.price_current.toFixed(4)}</div>
+                    </div>
+
+                    <div class="indicators-grid">
+                        <div class="indicator-box">
+                            <div class="indicator-title">📈 Market Trend</div>
+                            <div class="indicator-value">${moeda.details.market_trend.trend}</div>
+                            <div class="indicator-detail">Conf: ${moeda.details.market_trend.confidence}%</div>
+                        </div>
+                        <div class="indicator-box">
+                            <div class="indicator-title">🏗️ Structure</div>
+                            <div class="indicator-value">${moeda.details.structure.structure_type}</div>
+                            <div class="indicator-detail">Score: ${moeda.details.structure.score}</div>
+                        </div>
+                        <div class="indicator-box">
+                            <div class="indicator-title">📐 Fibonacci</div>
+                            <div class="indicator-value">${moeda.details.fibonacci.score}/100</div>
+                        </div>
+                        <div class="indicator-box">
+                            <div class="indicator-title">🎯 Wyckoff</div>
+                            <div class="indicator-value">${moeda.details.wyckoff.phase}</div>
+                            <div class="indicator-detail">Score: ${moeda.details.wyckoff.score}</div>
+                        </div>
+                        <div class="indicator-box">
+                            <div class="indicator-title">💎 Didi+BB</div>
+                            <div class="indicator-value">${moeda.details.didi_bollinger.score}/100</div>
+                        </div>
+                        <div class="indicator-box">
+                            <div class="indicator-title">📊 Momentum</div>
+                            <div class="indicator-value">RSI ${moeda.details.momentum.rsi.toFixed(1)}</div>
+                        </div>
+                    </div>
+
+                    ${moeda.main_signals.length > 0 ? `
+                        <div class="signals-section">
+                            <div class="signals-title">✅ Sinais Principais:</div>
+                            ${moeda.main_signals.map(s => `<span class="signal-badge">${s}</span>`).join('')}
+                        </div>
+                    ` : ''}
+
+                    <div class="recommendation-box ${recClass}">
+                        <strong>💡 Recomendação:</strong><br>
+                        ${moeda.recommendation}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Atualizar status
+        function atualizarStatus(dados) {
+            const now = new Date();
+            document.getElementById('lastUpdate').textContent = now.toLocaleTimeString();
+            
+            const excelentes = dados.filter(d => d.score_final >= 90).length;
+            const bons = dados.filter(d => d.score_final >= 60).length;
+            
+            document.getElementById('countExcelente').textContent = excelentes;
+            document.getElementById('countBom').textContent = bons;
+            document.getElementById('countTotal').textContent = dados.length;
+        }
+
+        // Verificar alertas
+        function verificarAlertas(dados) {
+            const alertsDiv = document.getElementById('alerts');
+            alertsDiv.innerHTML = '';
+            
+            const setupsFortes = dados.filter(d => d.score_final >= 75);
+            
+            if (setupsFortes.length > 0) {
+                const nomes = setupsFortes.map(d => d.simbolo.replace('USDT', '')).join(', ');
+                alertsDiv.innerHTML = `
+                    <div class="alert-banner">
+                        🚨 ALERTA: ${setupsFortes.length} Setup(s) FORTE(S) Detectado(s)!<br>
+                        ${nomes}
+                    </div>
+                `;
+                
+                if (soundEnabled) {
+                    playAlertSound();
+                }
+            }
+        }
+
+        // Toggle auto-update
+        function toggleAutoUpdate() {
+            autoUpdateEnabled = !autoUpdateEnabled;
+            document.getElementById('autoStatus').textContent = autoUpdateEnabled ? 'ON' : 'OFF';
+            
+            if (autoUpdateEnabled) {
+                autoUpdateInterval = setInterval(atualizarDados, 300000); // 5min
+            } else {
+                clearInterval(autoUpdateInterval);
+            }
+        }
+
+        // Toggle sound
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            document.getElementById('soundStatus').textContent = soundEnabled ? 'ON' : 'OFF';
+        }
+
+        // Filtrar
+        function filtrar(tipo) {
+            filtroAtual = tipo;
+            if (dadosCache) {
+                renderizarDados(dadosCache);
+            }
+        }
+
+        // Play alert sound
+        function playAlertSound() {
+            const audio = document.getElementById('alertSound');
+            audio.play().catch(e => console.log('Som não pode ser tocado:', e));
+        }
+
+        // Inicializar
+        window.onload = function() {
+            atualizarDados();
+        };
+    </script>
+</body>
+</html>
